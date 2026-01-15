@@ -191,55 +191,58 @@
 
     <script src="js/app.js"></script>
     <script type="module">
-    import { createChat } from 'https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.bundle.es.js';
+    // Wait for StorageManager to be available
+    if (typeof StorageManager !== 'undefined') {
+        import { createChat } from 'https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.bundle.es.js';
 
-    // Get the latest stats from your app logic
-    let stats = StorageManager.calculateStats();
+        // Get the latest stats from your app logic
+        let stats = StorageManager.calculateStats();
 
-    window.wellupChat = createChat({
-        webhookUrl: 'https://n8ngc.codeblazar.org/webhook/d301581f-d8b8-4f3e-a2b9-7ed782b9bfbc/chat',
-        title: 'WellUP Coach',
-        initialMessages: [
-            `Hi! I'm your WellUP Coach. I see you've done ${stats.count} workouts this week. How can I help you today?`
-        ],
-        metadata: {
-            workoutCount: stats.count,
-            totalMinutes: stats.totalMinutes,
-            totalCalories: stats.totalCalories
-        }
-    });
+        window.wellupChat = createChat({
+            webhookUrl: 'https://n8ngc.codeblazar.org/webhook/d301581f-d8b8-4f3e-a2b9-7ed782b9bfbc/chat',
+            title: 'WellUP Coach',
+            initialMessages: [
+                `Hi! I'm your WellUP Coach. I see you've done ${stats.count} workouts this week. How can I help you today?`
+            ],
+            metadata: {
+                workoutCount: stats.count,
+                totalMinutes: stats.totalMinutes,
+                totalCalories: stats.totalCalories
+            }
+        });
 
-    // Intercept fetch calls to inject current stats into webhook requests
-    const originalFetch = window.fetch;
-    window.fetch = function(...args) {
-        const url = args[0];
-        const config = args[1];
+        // Intercept fetch calls to inject current stats into webhook requests
+        const originalFetch = window.fetch;
+        window.fetch = function(...args) {
+            const url = args[0];
+            const config = args[1];
 
-        // Check if this is a request to the chat webhook
-        if (url && typeof url === 'string' && url.includes('d301581f-d8b8-4f3e-a2b9-7ed782b9bfbc')) {
-            if (config && config.body) {
-                try {
-                    // Parse the existing body
-                    const body = typeof config.body === 'string' ? JSON.parse(config.body) : config.body;
-                    
-                    // Get current stats and inject them
-                    const currentStats = StorageManager.calculateStats();
-                    body.metadata = {
-                        workoutCount: currentStats.count,
-                        totalMinutes: currentStats.totalMinutes,
-                        totalCalories: currentStats.totalCalories
-                    };
-                    
-                    // Update the request body with fresh stats
-                    config.body = JSON.stringify(body);
-                } catch (e) {
-                    console.log('Could not update fetch body');
+            // Check if this is a request to the chat webhook
+            if (url && typeof url === 'string' && url.includes('d301581f-d8b8-4f3e-a2b9-7ed782b9bfbc')) {
+                if (config && config.body) {
+                    try {
+                        // Parse the existing body
+                        const body = typeof config.body === 'string' ? JSON.parse(config.body) : config.body;
+                        
+                        // Get current stats and inject them
+                        const currentStats = StorageManager.calculateStats();
+                        body.metadata = {
+                            workoutCount: currentStats.count,
+                            totalMinutes: currentStats.totalMinutes,
+                            totalCalories: currentStats.totalCalories
+                        };
+                        
+                        // Update the request body with fresh stats
+                        config.body = JSON.stringify(body);
+                    } catch (e) {
+                        console.log('Could not update fetch body');
+                    }
                 }
             }
-        }
 
-        return originalFetch.apply(this, args);
-    };
+            return originalFetch.apply(this, args);
+        };
+    }
 </script>
 </body>
 </html>
