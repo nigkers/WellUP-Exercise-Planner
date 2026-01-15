@@ -9,6 +9,47 @@ const CONFIG = {
 };
 
 // ===================================
+// Page Router
+// ===================================
+
+const PageRouter = {
+    currentPage: 'dashboard',
+
+    init() {
+        const navBtns = document.querySelectorAll('.nav-btn');
+        navBtns.forEach(btn => {
+            btn.addEventListener('click', () => this.navigateTo(btn.dataset.page));
+        });
+    },
+
+    navigateTo(page) {
+        // Hide all pages
+        document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
+        
+        // Show selected page
+        const selectedPage = document.getElementById(`page-${page}`);
+        if (selectedPage) {
+            selectedPage.style.display = 'block';
+        }
+
+        // Update active nav button
+        document.querySelectorAll('.nav-btn').forEach(btn => {
+            btn.classList.remove('active');
+            if (btn.dataset.page === page) {
+                btn.classList.add('active');
+            }
+        });
+
+        this.currentPage = page;
+
+        // Trigger page-specific actions
+        if (page === 'insights') {
+            UIManager.renderInsights();
+        }
+    },
+};
+
+// ===================================
 // Storage Manager
 // ===================================
 
@@ -150,10 +191,80 @@ const UIManager = {
         calendar.innerHTML = html;
     },
 
-    toggleModal(show = true) {
-        document.getElementById('workoutModal').classList.toggle('hidden', !show);
+    renderInsights() {
+        const stats = StorageManager.calculateStats();
+        const workouts = StorageManager.getThisWeekWorkouts();
+
+        // Update summary stats
+        document.getElementById('insightWorkoutCount').textContent = stats.count;
+        document.getElementById('insightTotalMinutes').textContent = stats.totalMinutes;
+        document.getElementById('insightCalories').textContent = stats.totalCalories;
+
+        // Workout distribution by type
+        const typeDistribution = {};
+        workouts.forEach(w => {
+            typeDistribution[w.type] = (typeDistribution[w.type] || 0) + 1;
+        });
+
+        let distributionHtml = '';
+        if (Object.keys(typeDistribution).length === 0) {
+            distributionHtml = '<p style="color: #9CA3AF;">No workout data this week.</p>';
+        } else {
+            distributionHtml = Object.entries(typeDistribution)
+                .map(([type, count]) => `
+                    <div class="distribution-item">
+                        <span class="distribution-label">${type.charAt(0).toUpperCase() + type.slice(1)}</span>
+                        <span class="distribution-value">${count} ${count === 1 ? 'workout' : 'workouts'}</span>
+                    </div>
+                `)
+                .join('');
+        }
+        document.getElementById('insightDistribution').innerHTML = distributionHtml;
+
+        // Weekly activity
+        const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+        let activityHtml = '';
+        for (let i = 0; i < 7; i++) {
+            const date = new Date();
+            date.setDate(date.getDate() - date.getDay() + i);
+            const dateStr = date.toISOString().split('T')[0];
+            const dayWorkouts = workouts.filter(w => w.date === dateStr);
+            const dayMinutes = dayWorkouts.reduce((sum, w) => sum + parseInt(w.duration || 0), 0);
+            
+            activityHtml += `
+                <div class="activity-item">
+                    <span class="activity-day">${days[date.getDay()]}</span>
+                    <div class="activity-bar" style="width: ${dayMinutes > 0 ? Math.min(dayMinutes / stats.totalMinutes * 100, 100) : 0}%"></div>
+                    <span class="activity-value">${dayMinutes}m</span>
+                </div>
+            `;
+        }
+        document.getElementById('insightActivity').innerHTML = activityHtml;
+
+        // Personal records
+        if (workouts.length === 0) {
+            document.getElementById('insightRecords').innerHTML = '<p style="color: #9CA3AF;">Start tracking to see your records!</p>';
+        } else {
+            const longestWorkout = Math.max(...workouts.map(w => parseInt(w.duration || 0)));
+            const mostCalories = Math.max(...workouts.map(w => parseInt(w.calories || 0)));
+            const favoriteType = Object.entries(typeDistribution).reduce((a, b) => a[1] > b[1] ? a : b)[0];
+
+            document.getElementById('insightRecords').innerHTML = `
+                <div class="record-item">
+                    <span class="record-label">Longest Workout</span>
+                    <span class="record-value">${longestWorkout} min</span>
+                </div>
+                <div class="record-item">
+                    <span class="record-label">Most Calories</span>
+                    <span class="record-value">${mostCalories} cal</span>
+                </div>
+                <div class="record-item">
+                    <span class="record-label">Favorite Type</span>
+                    <span class="record-value">${favoriteType.charAt(0).toUpperCase() + favoriteType.slice(1)}</span>
+                </div>
+            `;
+        }
     },
-};
 
 // ===================================
 // Event Handlers
@@ -174,7 +285,10 @@ window.addWorkout = (e) => {
 
     StorageManager.addWorkout(workout);
     document.getElementById('workoutForm').reset();
-    UIManager.toggleModal(false);
+    
+    // Navigate back to dashboard
+    PageRouter.navigateTo('dashboard');
+    
     UIManager.renderWorkouts();
     UIManager.renderWeekCalendar();
     UIManager.updateStats();
@@ -183,7 +297,6 @@ window.addWorkout = (e) => {
     const updatedStats = StorageManager.calculateStats();
     
     if (window.wellupChat) {
-        // Update the chat instance's metadata so it's available for the next user message
         window.wellupChat._metadata = {
             workoutCount: updatedStats.count,
             totalMinutes: updatedStats.totalMinutes,
@@ -212,7 +325,9 @@ window.editWorkout = (id) => {
         document.getElementById('workoutCalories').value = workout.calories;
         document.getElementById('workoutType').value = workout.type;
         document.getElementById('workoutNotes').value = workout.notes || '';
-        UIManager.toggleModal(true);
+        
+        // Navigate to add-workout page
+        PageRouter.navigateTo('add-workout');
         
         // Change submit button to update
         const submitBtn = document.querySelector('#workoutForm button[type="submit"]');
@@ -232,7 +347,7 @@ window.editWorkout = (id) => {
             submitBtn.textContent = originalText;
             submitBtn.onclick = null;
             document.getElementById('workoutForm').reset();
-            UIManager.toggleModal(false);
+            PageRouter.navigateTo('dashboard');
             UIManager.renderWorkouts();
             UIManager.renderWeekCalendar();
             UIManager.updateStats();
@@ -248,11 +363,11 @@ window.editWorkout = (id) => {
 window.getCurrentStats = () => StorageManager.calculateStats();
 
 document.addEventListener('DOMContentLoaded', () => {
+    // Initialize page router
+    PageRouter.init();
+
     // Form handling
     document.getElementById('workoutForm').addEventListener('submit', window.addWorkout);
-    document.getElementById('addWorkoutBtn').addEventListener('click', () => UIManager.toggleModal(true));
-    document.getElementById('closeModal').addEventListener('click', () => UIManager.toggleModal(false));
-    document.getElementById('cancelBtn').addEventListener('click', () => UIManager.toggleModal(false));
 
     // Set today's date as default
     const today = new Date().toISOString().split('T')[0];

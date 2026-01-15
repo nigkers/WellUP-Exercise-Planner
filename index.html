@@ -18,6 +18,11 @@
         <header class="header">
             <div class="header-content">
                 <div class="logo">WellUP</div>
+                <nav class="nav-menu">
+                    <button class="nav-btn active" data-page="dashboard">📊 Dashboard</button>
+                    <button class="nav-btn" data-page="add-workout">➕ Add Workout</button>
+                    <button class="nav-btn" data-page="insights">📈 Insights</button>
+                </nav>
                 <button class="menu-btn" id="menuBtn" aria-label="Menu">
                     <span class="menu-icon">☰</span>
                 </button>
@@ -26,111 +31,157 @@
 
         <!-- Main Content -->
         <main class="main-content">
-            <!-- Hero Section -->
-            <section class="hero">
-                <h1>Welcome to WellUP</h1>
-                <p>Your wellness journey starts here</p>
-            </section>
+            <!-- Dashboard Page -->
+            <div class="page" id="page-dashboard" style="display: block;">
+                <!-- Hero Section -->
+                <section class="hero">
+                    <h1>Welcome to WellUP</h1>
+                    <p>Your wellness journey starts here</p>
+                </section>
 
-            <!-- Stats Section -->
-            <section class="stats-section">
-                <div class="stat-card">
-                    <div class="stat-icon">🎯</div>
-                    <div class="stat-text">
-                        <div class="stat-number" id="workoutCount">0</div>
-                        <div class="stat-label">Workouts</div>
+                <!-- Stats Section -->
+                <section class="stats-section">
+                    <div class="stat-card">
+                        <div class="stat-icon">🎯</div>
+                        <div class="stat-text">
+                            <div class="stat-number" id="workoutCount">0</div>
+                            <div class="stat-label">Workouts</div>
+                        </div>
                     </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">⏱️</div>
-                    <div class="stat-text">
-                        <div class="stat-number" id="totalMinutes">0</div>
-                        <div class="stat-label">Minutes</div>
+                    <div class="stat-card">
+                        <div class="stat-icon">⏱️</div>
+                        <div class="stat-text">
+                            <div class="stat-number" id="totalMinutes">0</div>
+                            <div class="stat-label">Minutes</div>
+                        </div>
                     </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">🔥</div>
-                    <div class="stat-text">
-                        <div class="stat-number" id="caloriesBurned">0</div>
-                        <div class="stat-label">Calories</div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🔥</div>
+                        <div class="stat-text">
+                            <div class="stat-number" id="caloriesBurned">0</div>
+                            <div class="stat-label">Calories</div>
+                        </div>
                     </div>
-                </div>
-            </section>
+                </section>
 
-            <!-- Workout Section -->
-            <section class="workouts-section">
-                <div class="section-header">
-                    <h2>Upcoming Workouts</h2>
-                    <button class="btn btn-primary" id="addWorkoutBtn">+ Add Workout</button>
-                </div>
-                <div class="workouts-list" id="workoutsList">
-                    <!-- Workouts will be populated here -->
-                </div>
-            </section>
+                <!-- Workout Section -->
+                <section class="workouts-section">
+                    <div class="section-header">
+                        <h2>Upcoming Workouts</h2>
+                    </div>
+                    <div class="workouts-list" id="workoutsList">
+                        <!-- Workouts will be populated here -->
+                    </div>
+                </section>
 
-            <!-- Weekly Calendar -->
-            <section class="calendar-section">
-                <h2>This Week</h2>
-                <div class="week-calendar" id="weekCalendar">
-                    <!-- Calendar will be populated here -->
-                </div>
-            </section>
+                <!-- Weekly Calendar -->
+                <section class="calendar-section">
+                    <h2>This Week</h2>
+                    <div class="week-calendar" id="weekCalendar">
+                        <!-- Calendar will be populated here -->
+                    </div>
+                </section>
+            </div>
+
+            <!-- Add Workout Page -->
+            <div class="page" id="page-add-workout" style="display: none;">
+                <section class="form-page">
+                    <h1>Add Workout</h1>
+                    <form id="workoutForm" class="workout-form">
+                        <div class="form-group">
+                            <label for="workoutName">Workout Name</label>
+                            <input type="text" id="workoutName" placeholder="e.g., Morning Run" required>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="workoutDate">Date</label>
+                                <input type="date" id="workoutDate" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="workoutTime">Time</label>
+                                <input type="time" id="workoutTime" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="workoutDuration">Duration (minutes)</label>
+                                <input type="number" id="workoutDuration" min="1" placeholder="30" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="workoutCalories">Calories</label>
+                                <input type="number" id="workoutCalories" min="0" placeholder="200" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="workoutType">Type</label>
+                            <select id="workoutType" required>
+                                <option value="">Select Type</option>
+                                <option value="cardio">Cardio</option>
+                                <option value="strength">Strength</option>
+                                <option value="flexibility">Flexibility</option>
+                                <option value="sports">Sports</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="workoutNotes">Notes</label>
+                            <textarea id="workoutNotes" placeholder="How did it go?"></textarea>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">Save Workout</button>
+                        </div>
+                    </form>
+                </section>
+            </div>
+
+            <!-- Insights Page -->
+            <div class="page" id="page-insights" style="display: none;">
+                <section class="insights-page">
+                    <h1>Insights</h1>
+                    <div class="insights-container">
+                        <div class="insight-card">
+                            <h3>Weekly Summary</h3>
+                            <div class="insight-content">
+                                <div class="insight-stat">
+                                    <span class="insight-label">Total Workouts</span>
+                                    <span class="insight-value" id="insightWorkoutCount">0</span>
+                                </div>
+                                <div class="insight-stat">
+                                    <span class="insight-label">Total Minutes</span>
+                                    <span class="insight-value" id="insightTotalMinutes">0</span>
+                                </div>
+                                <div class="insight-stat">
+                                    <span class="insight-label">Calories Burned</span>
+                                    <span class="insight-value" id="insightCalories">0</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="insight-card">
+                            <h3>Workout Distribution</h3>
+                            <div class="insight-content" id="insightDistribution">
+                                <!-- Will be populated with workout types -->
+                            </div>
+                        </div>
+
+                        <div class="insight-card">
+                            <h3>Weekly Activity</h3>
+                            <div class="insight-content" id="insightActivity">
+                                <!-- Will be populated with daily activity -->
+                            </div>
+                        </div>
+
+                        <div class="insight-card">
+                            <h3>Personal Records</h3>
+                            <div class="insight-content" id="insightRecords">
+                                <!-- Will be populated with records -->
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
         </main>
 
-        <!-- Workout Modal -->
-        <div class="modal hidden" id="workoutModal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3>Add Workout</h3>
-                    <button class="close-btn" id="closeModal">✕</button>
-                </div>
-                <form id="workoutForm" class="workout-form">
-                    <div class="form-group">
-                        <label for="workoutName">Workout Name</label>
-                        <input type="text" id="workoutName" placeholder="e.g., Morning Run" required>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="workoutDate">Date</label>
-                            <input type="date" id="workoutDate" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="workoutTime">Time</label>
-                            <input type="time" id="workoutTime" required>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="workoutDuration">Duration (minutes)</label>
-                            <input type="number" id="workoutDuration" min="1" placeholder="30" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="workoutCalories">Calories</label>
-                            <input type="number" id="workoutCalories" min="0" placeholder="200" required>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="workoutType">Type</label>
-                        <select id="workoutType" required>
-                            <option value="">Select Type</option>
-                            <option value="cardio">Cardio</option>
-                            <option value="strength">Strength</option>
-                            <option value="flexibility">Flexibility</option>
-                            <option value="sports">Sports</option>
-                            <option value="other">Other</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="workoutNotes">Notes</label>
-                        <textarea id="workoutNotes" placeholder="How did it go?"></textarea>
-                    </div>
-                    <div class="form-actions">
-                        <button type="button" class="btn btn-secondary" id="cancelBtn">Cancel</button>
-                        <button type="submit" class="btn btn-primary">Save</button>
-                    </div>
-                </form>
-            </div>
-        </div>
 
         <!-- Footer -->
         <footer class="footer">
