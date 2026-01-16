@@ -67,22 +67,25 @@
                 </section>
 
                 <!-- Workout Section -->
-                <section class="workouts-section">
-                    <div class="section-header">
-                        <h2>Upcoming Workouts</h2>
-                    </div>
-                    <div class="workouts-list" id="workoutsList">
-                        <!-- Workouts will be populated here -->
-                    </div>
-                </section>
+                <!-- Workout Section (Collapsible on mobile) -->
+                <details class="collapsible" id="workoutsCollapsible" open>
+                  <summary>Upcoming Workouts</summary>
+                  <section class="workouts-section collapsible-content">
+                      <div class="workouts-list" id="workoutsList">
+                          <!-- Workouts will be populated here -->
+                      </div>
+                  </section>
+                </details>
 
-                <!-- Weekly Calendar -->
-                <section class="calendar-section">
-                    <h2>This Week</h2>
-                    <div class="week-calendar" id="weekCalendar">
-                        <!-- Calendar will be populated here -->
-                    </div>
-                </section>
+                <!-- Weekly Calendar (Horizontally scrollable on mobile) -->
+                <details class="collapsible" id="calendarCollapsible" open>
+                  <summary>This Week</summary>
+                  <section class="calendar-section collapsible-content">
+                      <div class="week-calendar" id="weekCalendar">
+                          <!-- Calendar will be populated here -->
+                      </div>
+                  </section>
+                </details>
             </div>
 
             <!-- Add Workout Page -->
@@ -137,49 +140,53 @@
             </div>
 
             <!-- Insights Page -->
+            <!-- Insights Page (Collapsible on mobile) -->
             <div class="page" id="page-insights" style="display: none;">
                 <section class="insights-page">
                     <h1>Insights</h1>
-                    <div class="insights-container">
-                        <div class="insight-card">
-                            <h3>Weekly Summary</h3>
-                            <div class="insight-content">
-                                <div class="insight-stat">
-                                    <span class="insight-label">Total Workouts</span>
-                                    <span class="insight-value" id="insightWorkoutCount">0</span>
-                                </div>
-                                <div class="insight-stat">
-                                    <span class="insight-label">Total Minutes</span>
-                                    <span class="insight-value" id="insightTotalMinutes">0</span>
-                                </div>
-                                <div class="insight-stat">
-                                    <span class="insight-label">Calories Burned</span>
-                                    <span class="insight-value" id="insightCalories">0</span>
-                                </div>
-                            </div>
-                        </div>
+                    <details class="collapsible" id="insightsCollapsible" open>
+                      <summary>Show Insights</summary>
+                      <div class="insights-container collapsible-content">
+                          <div class="insight-card">
+                              <h3>Weekly Summary</h3>
+                              <div class="insight-content">
+                                  <div class="insight-stat">
+                                      <span class="insight-label">Total Workouts</span>
+                                      <span class="insight-value" id="insightWorkoutCount">0</span>
+                                  </div>
+                                  <div class="insight-stat">
+                                      <span class="insight-label">Total Minutes</span>
+                                      <span class="insight-value" id="insightTotalMinutes">0</span>
+                                  </div>
+                                  <div class="insight-stat">
+                                      <span class="insight-label">Calories Burned</span>
+                                      <span class="insight-value" id="insightCalories">0</span>
+                                  </div>
+                              </div>
+                          </div>
 
-                        <div class="insight-card">
-                            <h3>Workout Distribution</h3>
-                            <div class="insight-content" id="insightDistribution">
-                                <!-- Will be populated with workout types -->
-                            </div>
-                        </div>
+                          <div class="insight-card">
+                              <h3>Workout Distribution</h3>
+                              <div class="insight-content" id="insightDistribution">
+                                  <!-- Will be populated with workout types -->
+                              </div>
+                          </div>
 
-                        <div class="insight-card">
-                            <h3>Weekly Activity</h3>
-                            <div class="insight-content" id="insightActivity">
-                                <!-- Will be populated with daily activity -->
-                            </div>
-                        </div>
+                          <div class="insight-card">
+                              <h3>Weekly Activity</h3>
+                              <div class="insight-content" id="insightActivity">
+                                  <!-- Will be populated with daily activity -->
+                              </div>
+                          </div>
 
-                        <div class="insight-card">
-                            <h3>Personal Records</h3>
-                            <div class="insight-content" id="insightRecords">
-                                <!-- Will be populated with records -->
-                            </div>
-                        </div>
-                    </div>
+                          <div class="insight-card">
+                              <h3>Personal Records</h3>
+                              <div class="insight-content" id="insightRecords">
+                                  <!-- Will be populated with records -->
+                              </div>
+                          </div>
+                      </div>
+                    </details>
                 </section>
             </div>
         </main>

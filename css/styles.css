@@ -418,10 +418,19 @@ body {
    Weekly Calendar
    =================================== */
 
+
+/* Horizontally scrollable week calendar for mobile */
 .week-calendar {
-    display: grid;
-    grid-template-columns: 1fr;
+    display: flex;
+    overflow-x: auto;
     gap: var(--spacing-md);
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: var(--spacing-md);
+}
+
+.day-card {
+    min-width: 110px;
+    flex: 0 0 auto;
 }
 
 .day-card {
@@ -435,10 +444,56 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: center;
+/* Collapsible section styles */
+.collapsible {
+    border: none;
+    background: none;
+    padding: 0;
+    margin: 0 0 var(--spacing-md) 0;
+}
+.collapsible summary {
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    cursor: pointer;
+    padding: var(--spacing-sm) 0;
+    outline: none;
+    color: var(--primary-blue);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+}
+.collapsible[open] summary::after {
+    content: "▲";
+    margin-left: var(--spacing-xs);
+    font-size: 0.8em;
+}
+.collapsible summary::after {
+    content: "▼";
+    margin-left: var(--spacing-xs);
+    font-size: 0.8em;
+}
+.collapsible-content {
+    padding: 0;
+}
 }
 
+    .week-calendar {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        overflow-x: unset;
+        gap: var(--spacing-md);
+        padding-bottom: 0;
+    }
+    .day-card {
+        min-width: unset;
+        flex: unset;
+    }
+}
 .day-card:hover {
     border-color: var(--primary-blue);
+    .week-calendar {
+        grid-template-columns: repeat(7, 1fr);
+    }
     box-shadow: var(--shadow-sm);
 }
 
