@@ -240,24 +240,49 @@ const UIManager = {
         }
         document.getElementById('insightDistribution').innerHTML = distributionHtml;
 
-        // Weekly activity
-        const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-        let activityHtml = '';
+        // Weekly activity with bar chart
+        const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        const fullDays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+        
+        // Calculate daily minutes
+        const dailyMinutes = [];
         for (let i = 0; i < 7; i++) {
             const date = new Date();
             date.setDate(date.getDate() - date.getDay() + i);
             const dateStr = date.toISOString().split('T')[0];
             const dayWorkouts = workouts.filter(w => w.date === dateStr);
             const dayMinutes = dayWorkouts.reduce((sum, w) => sum + parseInt(w.duration || 0), 0);
+            dailyMinutes.push(dayMinutes);
+        }
+        
+        // Find max value for scaling
+        const maxMinutes = Math.max(...dailyMinutes, 1); // At least 1 to avoid division by zero
+        
+        // Create bar chart HTML
+        let activityHtml = '<div class="weekly-chart-container">';
+        activityHtml += '<div class="chart-header"><span>Weekly Workout Duration</span><span class="chart-unit">minutes</span></div>';
+        activityHtml += '<div class="chart-bars">';
+        
+        for (let i = 0; i < 7; i++) {
+            const date = new Date();
+            date.setDate(date.getDate() - date.getDay() + i);
+            const dayMinutes = dailyMinutes[i];
+            const barHeight = (dayMinutes / maxMinutes) * 100;
+            const barHeightPx = Math.max(barHeight * 1.2, 5); // Scale for visibility
             
             activityHtml += `
                 <div class="activity-item">
-                    <span class="activity-day">${days[date.getDay()]}</span>
-                    <div class="activity-bar" style="width: ${dayMinutes > 0 ? Math.min(dayMinutes / stats.totalMinutes * 100, 100) : 0}%"></div>
-                    <span class="activity-value">${dayMinutes}m</span>
+                    <div class="activity-bar-container">
+                        <div class="activity-bar" style="height: ${barHeightPx}px">
+                            ${dayMinutes > 0 ? `<div class="activity-bar-value">${dayMinutes}m</div>` : ''}
+                        </div>
+                    </div>
+                    <div class="activity-day">${days[date.getDay()]}</div>
                 </div>
             `;
         }
+        
+        activityHtml += '</div></div>';
         document.getElementById('insightActivity').innerHTML = activityHtml;
 
         // Personal records
