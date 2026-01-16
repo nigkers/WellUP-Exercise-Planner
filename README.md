@@ -1,103 +1,32 @@
-# ExercisePlan - Exercise Planning & Management App
 
-Welcome to **ExercisePlan**, your personal workout planning and management companion! This app helps you track your exercise routines, plan weekly workouts, and connect with an AI assistant powered by n8n.
+# WellUP Exercise Planner
 
-## Features
+WellUP is a simple, mobile-friendly website for planning and tracking your workouts. You can add workouts, view your weekly stats, and see your progress in a clear calendar view.
 
-✨ **Comprehensive Workout Management**
-- Plan and schedule workouts by type (Cardio, Strength, Flexibility, Sports, Other)
-- Track duration, calories burned, and intensity levels
-- Add personal notes to each workout
-- View workouts organized by week
+## How to Use
 
-📊 **Weekly Dashboard**
-- Real-time workout statistics (workouts this week, total minutes, calories burned)
-- Weekly calendar overview with workout indicators
-- Exercise type breakdown showing your activity distribution
-- Quick stats at a glance
+1. **Open the Website**
+   - Open the `index.html` file in your web browser (Chrome, Safari, Edge, etc.).
 
-💬 **AI Assistant Integration**
-- Chat with an AI-powered workout assistant
-- Get personalized workout recommendations
-- Ask questions about your exercise routine
-- Connected to n8n for intelligent responses
+2. **Add a Workout**
+   - Tap the "Add Workout" button.
+   - Fill in the workout name, date, time, duration, calories, type, and any notes.
+   - Press "Save Workout" to add it to your plan.
 
-📱 **Mobile-First Design**
-- Fully responsive interface
-- Touch-friendly buttons and controls
-- Fast and smooth interactions
-- Dark mode support
+3. **View Your Stats**
+   - The dashboard shows your total workouts, minutes, and calories for the week.
+   - Scroll down to see your upcoming workouts and a weekly calendar.
 
-## Getting Started
+4. **Track Your Progress**
+   - Check your workouts and stats each week.
+   - Use the calendar to see which days you have workouts planned.
 
-### 1. Open the App
-Simply open `index.html` in your web browser. No installation required!
+5. **Mobile Friendly**
+   - The site is designed to work well on phones and tablets. All main features are easy to use on mobile.
 
-### 2. Create Your First Workout
-- Click "Get Started" on the welcome screen
-- Click the "+ Add Workout" button
-- Fill in your workout details:
-  - **Name**: Give your workout a title (e.g., "Morning Run")
-  - **Type**: Choose from Cardio, Strength, Flexibility, Sports, or Other
-  - **Date & Time**: Set when your workout is scheduled
-  - **Duration**: How many minutes will you exercise?
-  - **Intensity**: Light, Moderate, or Intense
-  - **Estimated Calories**: How many calories will you burn?
-  - **Notes**: Optional details about your workout
+## What the Website Is About
 
-### 3. Track Your Workouts
-- Check off completed workouts
-- View your weekly progress on the calendar
-- Monitor your total minutes and calories burned
-- See your exercise type distribution
-
-### 4. Connect to N8N Chat (Optional)
-
-To enable the AI assistant chat feature:
-
-#### Step 1: Set Up N8N Webhook
-1. Go to your n8n instance (e.g., `https://your-n8n-domain.com`)
-2. Create a new workflow
-3. Add a **Webhook** trigger node with:
-   - Method: `POST`
-   - Path: `/exercise-chat` (or your preferred path)
-   - Authentication: Disable for now (or add basic auth)
-
-#### Step 2: Add AI Logic
-4. After the webhook, add your preferred AI node:
-   - **OpenAI Node** for ChatGPT integration
-   - **Anthropic Node** for Claude
-   - **Local LLM** for self-hosted solutions
-
-5. Configure your AI node to:
-   - Use the incoming message from the webhook
-   - Include context about the user's workouts
-   - Generate helpful responses about exercise
-
-#### Step 3: Update Webhook URL
-6. Copy your webhook URL from n8n
-7. Open `js/app.js` in your code editor
-8. Find this line (around line 20):
-   ```javascript
-   N8N_WEBHOOK_URL: 'https://your-n8n-instance.com/webhook/exercise-chat',
-   ```
-9. Replace with your actual webhook URL:
-   ```javascript
-   N8N_WEBHOOK_URL: 'https://your-n8n.com/webhook/exercise-chat',
-   ```
-
-#### Step 4: Test the Chat
-10. Reload your app in the browser
-11. Click the 💬 chat button in the header
-12. Type a message and send
-13. Your n8n workflow should respond!
-
-### Example N8N Workflow
-
-Here's a simple example workflow configuration:
-
-1. **Webhook Trigger** → Receives POST with: message, workouts, stats, timestamp
-2. **OpenAI Node** → Takes the message and generates a response
+WellUP helps you organize your exercise routine, track your progress, and stay motivated. It’s a simple tool for anyone who wants to keep their fitness on track, whether you’re a beginner or experienced athlete.
 3. **Return Response** → Sends back the AI response
 
 Sample Webhook Response Format:
